@@ -29,3 +29,4 @@ jobs:
           cd openai-code-review-sdk/src/main/java
           javac cn/Raven/sdk/OpenAiCodeReview.java
           java cn.Raven.sdk.OpenAiCodeReview
+
