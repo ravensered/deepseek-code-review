@@ -1,6 +1,8 @@
 package cn.Raven.sdk;
 
+import cn.Raven.sdk.domain.model.ChatCompletionRequest;
 import cn.Raven.sdk.domain.model.ChatCompletionSyncResponse;
+import cn.Raven.sdk.domain.model.Model;
 import cn.Raven.sdk.types.utils.BearerTokenUtils;
 import com.alibaba.fastjson2.JSON;
 
@@ -8,6 +10,7 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 
 /**
  * @Description
@@ -47,30 +50,31 @@ public class OpenAiCodeReview {
 
     private static String codeReview(String diffCode) throws Exception {
         String apiKeySecret="87e2801ef8ab4b98bd8feba6266d1818.YlbPP9YlesyDXerS";
+
         String token = BearerTokenUtils.getToken(apiKeySecret);
 
-        URL url=new URL("https://open.bigmodel.cn/api/paas/v4/chat/completions");
+        URL url = new URL("https://open.bigmodel.cn/api/paas/v4/chat/completions");
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
         connection.setRequestMethod("POST");
-        connection.setRequestProperty("Authorization","Bearer "+token);
-        connection.setRequestProperty("Content-Type","application/json");
-        connection.setRequestProperty("User-Agent","Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)");
+        connection.setRequestProperty("Authorization", "Bearer " + token);
+        connection.setRequestProperty("Content-Type", "application/json");
+        connection.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)");
         connection.setDoOutput(true);
 
-        String jsonInpuString = "{"
-                + "\"model\":\"glm-4-flash\","
-                + "\"messages\": ["
-                + "    {"
-                + "        \"role\": \"user\","
-                + "        \"content\": \"你是一个高级编程架构师，精通各类场景方案、架构设计和编程语言请，请您根据git diff记录，对代码做出评审。代码为: " + diffCode + "\""
-                + "    }"
-                + "]"
-                + "}";
+        ChatCompletionRequest chatCompletionRequest = new ChatCompletionRequest();
+        chatCompletionRequest.setModel(Model.GLM_4_FLASH.getCode());
+        chatCompletionRequest.setMessages(new ArrayList<ChatCompletionRequest.Prompt>() {
+            private static final long serialVersionUID = -7988151926241837899L;
 
+            {
+                add(new ChatCompletionRequest.Prompt("user", "你是一个高级编程架构师，精通各类场景方案、架构设计和编程语言请，请您根据git diff记录，对代码做出评审。代码如下:"));
+                add(new ChatCompletionRequest.Prompt("user", diffCode));
+            }
+        });
 
-        try(OutputStream os = connection.getOutputStream()){
-            byte[] input = jsonInpuString.getBytes(StandardCharsets.UTF_8);
+        try (OutputStream os = connection.getOutputStream()) {
+            byte[] input = JSON.toJSONString(chatCompletionRequest).getBytes(StandardCharsets.UTF_8);
             os.write(input);
         }
 
@@ -81,16 +85,17 @@ public class OpenAiCodeReview {
         String inputLine;
 
         StringBuilder content = new StringBuilder();
-        while ((inputLine = in.readLine()) != null){
+        while ((inputLine = in.readLine()) != null) {
             content.append(inputLine);
         }
 
         in.close();
         connection.disconnect();
 
-        ChatCompletionSyncResponse response = JSON.parseObject(content.toString(), ChatCompletionSyncResponse.class);
-        return (response.getChoices().get(0).getMessage().getContent());
+        System.out.println("评审结果：" + content.toString());
 
+        ChatCompletionSyncResponse response = JSON.parseObject(content.toString(), ChatCompletionSyncResponse.class);
+        return response.getChoices().get(0).getMessage().getContent();
     }
 
 }
