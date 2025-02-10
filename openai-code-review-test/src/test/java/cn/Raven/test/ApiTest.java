@@ -18,5 +18,7 @@ public class ApiTest {
     @Test
     public void test(){
         System.out.println("aaaaRaven");
+        System.out.println("aaaa2");
+        System.out.println("BBB");
     }
 }
