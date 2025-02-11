@@ -27,6 +27,8 @@ jobs:
         run: mvn dependency:copy -Dartifact=cn.Raven:openai-code-review-sdk:1.0 -DoutputDirectory=./libs
       - name: Run Code Review
         run: java -jar ./libs/openai-code-review-sdk-1.0.jar
+        env:
+          GITHUB_TOKEN: ${{secrets.CODE_TOKEN}}
 
 
 
