@@ -5,14 +5,14 @@ import java.util.Map;
 
 public class Message {
 
-    private String touser = "or0Ab6ivwmypESVp_bYuk92T6SvU";
-    private String template_id = "GLlAM-Q4jdgsktdNd35hnEbHVam2mwsW2YWuxDhpQkU";
+    private String touser = "oxF5Q7HPRA3y_jj68Nfszq7siPA0";
+    private String template_id = "nyPLEITbmzbPGs60Oh1F1mZ9OFmLv7w3mrMc7KvlAc0";
     private String url = "https://weixin.qq.com";
     private Map<String, Map<String, String>> data = new HashMap<>();
 
     public void put(String key, String value) {
         data.put(key, new HashMap<String, String>() {
-            private static final long serialVersionUID = 7092338402387318563L;
+            //private static final long serialVersionUID = 7092338402387318563L;
 
             {
                 put("value", value);

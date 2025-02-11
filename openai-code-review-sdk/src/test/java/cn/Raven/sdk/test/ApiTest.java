@@ -2,6 +2,7 @@ package cn.Raven.sdk.test;
 
 import cn.Raven.sdk.domain.model.ChatCompletionSyncResponse;
 import cn.Raven.sdk.types.utils.BearerTokenUtils;
+import cn.Raven.sdk.types.utils.WXAccessTokenUtils;
 import com.alibaba.fastjson2.JSON;
 import org.junit.Test;
 
@@ -12,6 +13,9 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
 
 /**
  * @Description
@@ -72,6 +76,90 @@ public class ApiTest {
         ChatCompletionSyncResponse response = JSON.parseObject(content.toString(), ChatCompletionSyncResponse.class);
         System.out.println(response.getChoices().get(0).getMessage().getContent());
 
+    }
+
+
+    @Test
+    public void test_wx(){
+        String accessToken = WXAccessTokenUtils.getAccessToken();
+        System.out.println("accessToken = " + accessToken);
+
+        Message message = new Message();
+        message.put("project","big-market");
+        message.put("review","代码评审测试");
+
+
+        String url = String.format("https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=%s", accessToken);
+        sendPostRequest(url, JSON.toJSONString(message));
+
+    }
+    private static void sendPostRequest(String urlString, String jsonBody) {
+        try {
+            URL url = new URL(urlString);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("Content-Type", "application/json; utf-8");
+            conn.setRequestProperty("Accept", "application/json");
+            conn.setDoOutput(true);
+
+            try (OutputStream os = conn.getOutputStream()) {
+                byte[] input = jsonBody.getBytes(StandardCharsets.UTF_8);
+                os.write(input, 0, input.length);
+            }
+
+            try (Scanner scanner = new Scanner(conn.getInputStream(), StandardCharsets.UTF_8.name())) {
+                String response = scanner.useDelimiter("\\A").next();
+                System.out.println(response);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public static class Message{
+        private String touser ="oxF5Q7HPRA3y_jj68Nfszq7siPA0";
+        private String template_id="nyPLEITbmzbPGs60Oh1F1mZ9OFmLv7w3mrMc7KvlAc0";
+        private String url="https://github.com/ravensered/openai-code-review-log/blob/main/2025-02-11/IacJBgYLgWdu.md";
+        private Map<String ,Map<String,String>> data = new HashMap<>();
+
+
+        public void put(String key ,String value){
+            data.put(key,new HashMap<String,String>(){
+                {put("value",value);}
+            });
+        }
+        public String getTouser() {
+            return touser;
+        }
+
+        public void setTouser(String touser) {
+            this.touser = touser;
+        }
+
+        public String getTemplate_id() {
+            return template_id;
+        }
+
+        public void setTemplate_id(String template_id) {
+            this.template_id = template_id;
+        }
+
+        public String getUrl() {
+            return url;
+        }
+
+        public void setUrl(String url) {
+            this.url = url;
+        }
+
+        public Map<String, Map<String, String>> getData() {
+            return data;
+        }
+
+        public void setData(Map<String, Map<String, String>> data) {
+            this.data = data;
+        }
     }
 
 }
