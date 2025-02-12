@@ -13,10 +13,10 @@ public class OpenAiCodeReview {
     private static final Logger logger = LoggerFactory.getLogger(OpenAiCodeReview.class);
 
     // 配置配置
-    private String weixin_appid = "wx4a602f74236dcd7e";
-    private String weixin_secret = "7ee5879ecdbe7c975d7df32a28d3f75b";
-    private String weixin_touser = "oxF5Q7HPRA3y_jj68Nfszq7siPA0";
-    private String weixin_template_id = "nyPLEITbmzbPGs60Oh1F1mZ9OFmLv7w3mrMc7KvlAc0";
+    private String weixin_appid ;
+    private String weixin_secret;
+    private String weixin_touser;
+    private String weixin_template_id;
 
     // ChatGLM 配置
     private String chatglm_apiHost = "https://open.bigmodel.cn/api/paas/v4/chat/completions";
