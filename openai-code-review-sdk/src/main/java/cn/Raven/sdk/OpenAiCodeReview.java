@@ -1,10 +1,10 @@
 package cn.Raven.sdk;
 
 import cn.Raven.sdk.domain.service.impl.OpenAiCodeReviewService;
-import cn.Raven.sdk.infrastructure.deepseek.impl.DeepSeekChat;
 import cn.Raven.sdk.infrastructure.git.GitCommand;
 import cn.Raven.sdk.infrastructure.openai.IOpenAI;
 import cn.Raven.sdk.infrastructure.openai.impl.ChatGLM;
+import cn.Raven.sdk.infrastructure.openai.impl.DeepSeekChat;
 import cn.Raven.sdk.infrastructure.weixin.WeiXin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +24,7 @@ public class OpenAiCodeReview {
     private String chatglm_apiKeySecret = "";
 
     //DeepSeek配置
-    private String deepseek_apiHost="https://api.deepseek.com";
+    private String deepseek_apiHost="https://api.deepseek.com/chat/completions";
     private String deepseek_apiSecret="sk-e500c84c35604ef8bd24b079899610b6";
 
     // Github 配置
@@ -58,7 +58,7 @@ public class OpenAiCodeReview {
 
 
 
-        // IOpenAI openAI = new ChatGLM(getEnv("CHATGLM_APIHOST"), getEnv("CHATGLM_APIKEYSECRET"));
+         //IOpenAI openAI = new ChatGLM(getEnv("CHATGLM_APIHOST"), getEnv("CHATGLM_APIKEYSECRET"));
         IOpenAI openAI=new DeepSeekChat(getEnv("DeepSeek_APIHOST"),getEnv("DeepSeek_APIKEYSECRET"));
 
         OpenAiCodeReviewService openAiCodeReviewService = new OpenAiCodeReviewService(gitCommand, openAI, weiXin);

@@ -6,7 +6,7 @@ import java.util.List;
 
 public class ChatCompletionRequestDTO {
 
-    private String model = Model.GLM_4_FLASH.getCode();
+    private String model = "deepseek-chat";
     private List<Prompt> messages;
 
     public static class Prompt {
